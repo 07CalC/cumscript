@@ -1,5 +1,7 @@
 let a = 10
 let b = 20
+b = 5
+let ready = true
 
 ejac(a+b)
 
@@ -7,3 +9,33 @@ let name = "motherboard"
 let age = 23
 
 ejac("age of ", name, "is ", age)
+
+if (a>b) {
+  ejac("a is greater than b")
+} else {
+  ejac("b is greater than a")
+}
+
+repeat 10 {
+  ejac("hi")
+}
+
+for i in 1..10 {
+  ejac(i) // prints 1 2 3 4 5 6 ... 9
+}
+
+until ready {
+  ejac("bool is true")
+}
+
+fn sum(a, b) {
+  return a + b
+}
+
+edge {
+  risky()
+} recover (err) {
+  ejac("error happened: ", err)
+}
+
+// comments

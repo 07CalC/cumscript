@@ -1,0 +1,9 @@
+let a = 10
+let b = 20
+
+ejac(a+b)
+
+let name = "motherboard"
+let age = 23
+
+ejac("age of ", name, "is ", age)

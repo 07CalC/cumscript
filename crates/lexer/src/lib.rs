@@ -8,6 +8,7 @@ pub struct Lexer {
     read_position: usize,
     current_char: Option<char>,
     current_line: usize,
+    current_column: usize,
 }
 
 impl Lexer {
@@ -18,6 +19,7 @@ impl Lexer {
             read_position: 0,
             current_char: None,
             current_line: 1,
+            current_column: 0,
         };
         lexer.read_char();
         lexer
@@ -111,10 +113,11 @@ impl Lexer {
                 ch if ch.is_digit(10) => {
                     let number_str = self.read_number();
                     let number_value = number_str.parse::<f64>().unwrap_or_else(|_| {
-                        panic!(
+                        eprintln!(
                             "Invalid number format in line {}: {}",
                             self.current_line, number_str
-                        )
+                        );
+                        std::process::exit(1);
                     });
                     return Some(Token::new(
                         token::TokenKind::Number(number_value),
@@ -123,7 +126,11 @@ impl Lexer {
                 }
                 _ => {
                     self.read_char();
-                    panic!("Unexpected character in line {}: {}", self.current_line, ch);
+                    eprintln!(
+                        "[{}:{}] Unexpected character: {}",
+                        self.current_line, self.current_column, ch
+                    );
+                    std::process::exit(1);
                 }
             },
 
@@ -201,8 +208,11 @@ impl Lexer {
         }
         if self.current_char == Some('\n') {
             self.current_line += 1;
+            self.current_column = 0;
         }
+
         self.position = self.read_position;
         self.read_position += 1;
+        self.current_column += 1;
     }
 }

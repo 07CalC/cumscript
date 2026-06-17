@@ -15,8 +15,10 @@ pub enum TokenKind {
     Minus,
     Asterisk,
     Slash,
+    Bang,
     Equal,
     NotEqual,
+    DoubleEqual,
     LessThan,
     LessThanOrEqual,
     GreaterThan,
@@ -28,5 +30,20 @@ pub enum TokenKind {
     Comma,
     Semicolon,
     Dot,
+    Repeat,
+    Until,
+    For,
     EOF,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct Token {
+    pub kind: TokenKind,
+    pub line: usize,
+}
+
+impl Token {
+    pub fn new(kind: TokenKind, line: usize) -> Self {
+        Token { kind, line }
+    }
 }

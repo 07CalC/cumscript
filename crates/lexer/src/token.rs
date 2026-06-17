@@ -33,6 +33,8 @@ pub enum TokenKind {
     Repeat,
     Until,
     For,
+    DotDot,
+    In,
     EOF,
 }
 

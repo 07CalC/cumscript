@@ -81,6 +81,14 @@ impl Lexer {
                     let string_value = self.read_string();
                     Token::new(token::TokenKind::String(string_value), self.current_line)
                 }
+                '.' => {
+                    if self.peek() == Some('.') {
+                        self.read_char();
+                        Token::new(token::TokenKind::DotDot, self.current_line)
+                    } else {
+                        Token::new(token::TokenKind::Dot, self.current_line)
+                    }
+                }
                 ch if ch.is_alphabetic() || ch == '_' => {
                     let identifier = self.read_identifier();
                     let kind = match identifier.as_str() {
@@ -92,9 +100,13 @@ impl Lexer {
                         "true" => token::TokenKind::True,
                         "false" => token::TokenKind::False,
                         "null" => token::TokenKind::Null,
+                        "repeat" => token::TokenKind::Repeat,
+                        "until" => token::TokenKind::Until,
+                        "for" => token::TokenKind::For,
+                        "in" => token::TokenKind::In,
                         _ => token::TokenKind::Identifier(identifier),
                     };
-                    Token::new(kind, self.current_line)
+                    return Some(Token::new(kind, self.current_line));
                 }
                 ch if ch.is_digit(10) => {
                     let number_str = self.read_number();
@@ -104,7 +116,10 @@ impl Lexer {
                             self.current_line, number_str
                         )
                     });
-                    Token::new(token::TokenKind::Number(number_value), self.current_line)
+                    return Some(Token::new(
+                        token::TokenKind::Number(number_value),
+                        self.current_line,
+                    ));
                 }
                 _ => {
                     self.read_char();
@@ -122,6 +137,9 @@ impl Lexer {
         let mut result = String::new();
         while let Some(ch) = self.current_char {
             if ch.is_digit(10) || ch == '.' {
+                if self.peek() == Some('.') && ch == '.' {
+                    break;
+                }
                 result.push(ch);
                 self.read_char();
             } else {
